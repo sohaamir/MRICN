@@ -1,2 +1,2 @@
-# aamir_vs_chris
-MRICN tutorial on neuroimaging by looking at who has the bigger brain, me or Chris Gorgolewski?
+# Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN), Spring term, University of Birmingham, 2024
+
