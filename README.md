@@ -1,9 +1,8 @@
 ## `Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN)`<br>University of Birmingham (Spring 2024)
 
-
 These are the materials for my input to the MRICN module at the University of Birmingham. 
 
-## Aamir vs Chris (An introduction to neuroimaging data visualization and analysis using nibabel and nilearn)
+### Aamir vs Chris (An introduction to neuroimaging data visualization and analysis using nibabel and nilearn)
 
 The `aamir_vs_chris.ipynb` is a Google Colab notebook demonstrating the basic functions of two Python packages, `nibabel` and `nilearn` for manipulating and plotting neuroimaging data. [Nibabel](https://nipy.org/nibabel/) is a Python library primarily used for reading and writing different types of neuroimaging data files, while [Nilearn](https://nilearn.github.io/stable/index.html) is a Python module used for conducting a wide variety of statistical analyses on neuroimaging data.
 
