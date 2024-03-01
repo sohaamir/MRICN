@@ -24,3 +24,26 @@ Specifically, we go through the following uses:
 - Statistical Analysis of Brain Images
 
 We then can practically demonstrate a simple case of statistical analysis by comparing the size of two brains, my own and [Chris Gorgolewski's](https://github.com/chrisgorgo), a prime contributor to many open-source initiatives in neuroimaging, who's structural T1 scan is made publicly available through [OpenNeuro](openneuro.org). 
+
+Code for running the voxel comparison test in FSL: 
+
+```bash
+# Calculate the number of non-zero voxels for Chris' brain
+chris_voxels=$(fslstats chris_bet.nii -V | awk '{print $1}')
+
+# Calculate the number of non-zero voxels for Aamir's brain
+aamir_voxels=$(fslstats aamir_bet.nii -V | awk '{print $1}')
+
+# Print the number of voxels
+echo "Chris' brain size in voxels: $chris_voxels"
+echo "Aamir's brain size in voxels: $aamir_voxels"
+
+# Compare the voxel counts and print who has the bigger brain
+if [ "$chris_voxels" -gt "$aamir_voxels" ]; then
+    echo "Chris has the bigger brain."
+elif [ "$chris_voxels" -lt "$aamir_voxels" ]; then
+    echo "Aamir has the bigger brain."
+else
+    echo "Both brains are the same size."
+fi
+```
