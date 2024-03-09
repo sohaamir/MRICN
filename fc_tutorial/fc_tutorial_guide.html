@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>mricn_fc_tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="fc_tutorial_guide_files/libs/clipboard/clipboard.min.js"></script>
+<script src="fc_tutorial_guide_files/libs/quarto-html/quarto.js"></script>
+<script src="fc_tutorial_guide_files/libs/quarto-html/popper.min.js"></script>
+<script src="fc_tutorial_guide_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="fc_tutorial_guide_files/libs/quarto-html/anchor.min.js"></script>
+<link href="fc_tutorial_guide_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="fc_tutorial_guide_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="fc_tutorial_guide_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="fc_tutorial_guide_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="fc_tutorial_guide_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">mricn_fc_tutorial</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="performing-a-group-level-functional-connectivity-analysis" class="level1">
+<h1>Performing a group-level functional connectivity analysis</h1>
+<p>This guide borrows from one by Dianne Paterson at the University of Arizona, which you can find here: https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/fsl_fmri_restingstate-sbc.html</p>
+<p>In this tutorial you will run a group-level functional connectivity analysis on resting-state fMRI data of three participants. We will specifically look at the functiona connectivity of the posterior cingulate cortex (PCC), a region of the default mode network (DMN) that is commonly observed in resting-state data.</p>
+<section id="getting-the-data-prepared" class="level2">
+<h2 class="anchored" data-anchor-id="getting-the-data-prepared">Getting the data prepared</h2>
+<section id="setting-up" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up">Setting up</h3>
+<p>Navigate to your shared directory within the MRICN folder and copy the data:</p>
+<pre><code>cd /rds/projects/c/chechlmy-chbh-mricn/xxx
+cp -r /rds/projects/c/chechlmy-chbh-mricn/aamir_test/SBC .
+cd SBC
+ls</code></pre>
+<p>You should see the following:</p>
+<pre><code>sub1 sub2 sub3</code></pre>
+<p>Each of the folders has a single resting-state scan, called <code>sub1.nii.gz</code>, <code>sub2.nii.gz</code> and <code>sub3.nii.gz</code> respectively.</p>
+</section>
+<section id="creating-the-pcc-seed" class="level3">
+<h3 class="anchored" data-anchor-id="creating-the-pcc-seed">Creating the PCC seed</h3>
+<p>We will now create our seed region for the PCC. To do this, firstly load FSL and fsleyes in the terminal by running:</p>
+<pre><code>module load FSL/6.0.5.1-foss-2021a
+module load FSLeyes/1.3.3-foss-2021a</code></pre>
+<p>Check that we are in the correct directory (blah/your_username/SBC):</p>
+<pre><code>pwd</code></pre>
+<p>and create a new directory called <code>seed</code>:</p>
+<pre><code>mkdir seed</code></pre>
+<p>Now when you run <code>pwd</code> you should see:</p>
+<pre><code>seed sub1 sub2 sub3</code></pre>
+<p>Lets open FSLeyes:</p>
+<pre><code>fsleyes &amp;</code></pre>
+<p>We need to open the standard MNI template brain, select the PCC and make a mask.</p>
+<p>Here are the following steps:</p>
+<ol type="1">
+<li>Navigate to the top menu and click on <code>File ➜ Add standard</code> and select <code>MNI152_T1_2mm_brain.nii.gz</code>.</li>
+<li>When the image is open, click on <code>Settings ➜ Ortho View 1 ➜ Atlas panel</code></li>
+<li>Click <code>Settings ➜ Ortho View 1 ➜ Atlas panel</code>. An atlas panel opens on the bottom right.</li>
+<li>Select <code>Atlas search</code> (red box, lower middle).</li>
+<li>Ensure Harvard-Oxford Cortical Structural Atlas is selected (purple highlighting).</li>
+<li>Type <code>cing</code> in the search box and check the Cingulate Gyrus, posterior division (lower right) so that it is overlaid on the standard brain. (The full name may be obscured, but you can always check which region you have loaded by looking at the panel on the bottom right).</li>
+</ol>
+<p>At this point, your window should look something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="/Users/aamirsohail/Documents/GitHub/MRICN/assets/atlas_view.png" class="img-fluid figure-img" width="600"></p>
+<figcaption class="figure-caption">Atlas</figcaption>
+</figure>
+</div>
+<p>To save the seed, click the save symbol which is the first of three icons on the bottom left of the window.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/save_atlas.png" class="img-fluid figure-img" width="550"></p>
+<figcaption class="figure-caption">Save PCC</figcaption>
+</figure>
+</div>
+<p>The window that opens up should be your project SBC directory. Open into the <code>seed</code> folder and save your seed as <code>PCC</code>.</p>
+</section>
+<section id="extracting-the-time-series" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-the-time-series">Extracting the time-series</h3>
+<p>We now need to binarise the seed and to extract the mean timeseries.To do this, <strong>leaving FSLeyes open</strong>, go into your terminal (you may have to press Enter if some text about dc.DrawText is there) and type:</p>
+<pre><code>cd seed
+fslmaths PCC -thr 0.1 -bin PCC_bin</code></pre>
+<p>In FSLeyes click File ➜ Add from file to compare PCC.nii.gz (before binarization) and PCC_bin.nii.gz (after binarization). You should note that the signal values are all 1.0 for the binarized PCC.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/binarized.png" class="img-fluid figure-img" width="300"></p>
+<figcaption class="figure-caption">Binary mask</figcaption>
+</figure>
+</div>
+<p>You can now close FSLeyes.</p>
+<p>For each subject, you want to extract the average time series from the region defined by the PCC mask. To calculate this value for sub1, do the following:</p>
+<pre><code>cd ../sub1
+fslmeants -i sub1 -o sub1_PCC.txt -m ../seed/PCC_bin</code></pre>
+<p>This will generate a file within the <code>sub1</code> folder called <code>sub1_PCC.txt</code>. We can have a look at the contents by running <code>cat sub1_PCC.txt</code>.The terminal will print out a bunch of numbers with the last five being:</p>
+<pre><code>20014.25528
+20014.919
+20010.17317
+20030.02886
+20066.05141</code></pre>
+<p>This is the mean level of ‘activity’ for the PCC at each time-point.</p>
+<p>Now let’s repeat this for the other two subjects.</p>
+<pre><code>cd ../sub2
+fslmeants -i sub2 -o sub2_PCC.txt -m ../seed/PCC_bin
+cd ../sub3
+fslmeants -i sub3 -o sub3_PCC.txt -m ../seed/PCC_bin</code></pre>
+<p>Now if you go back to the SBC directory and list all of the files within the subject folders:</p>
+<pre><code>cd ..
+ls -R</code></pre>
+<p>You should see the following:</p>
+<p>[sbc_folders.png]</p>
+<p>Please let me know if you do not get this!!</p>
+<p>This is all we need to run the subject and group-level analyses using FEAT.</p>
+</section>
+</section>
+<section id="running-the-feat-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-feat-analyses">Running the FEAT analyses</h2>
+<section id="single-subject-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="single-subject-analysis">Single-subject analysis</h3>
+<p>Close your terminal, open another one, move to your SBC folder, load FSL and open Feat:</p>
+<pre><code>cd /rds/projects/c/chechlmy-chbh-mricn/xxx/SBC
+module load bear-apps/2022b
+module load FSL/6.0.7.6
+source $FSLDIR/etc/fslconf/fsl.sh
+Feat &amp;</code></pre>
+<p>We will run the first-level analysis for sub1. Set-up the following settings in the respective tabs:</p>
+<p><em>Data</em></p>
+<p><code>Select 4D data</code>: Click the folder icon, go into the <code>sub1</code> folder and choose <code>sub1.nii.gz</code>. Click OK. You will see a box saying that the ‘Input file has a TR of 1…’ this is fine, just click OK again.</p>
+<p><code>Output directory</code>: Click into the <code>sub1</code> folder and click OK. Nothing will be in the right hand column, but that is because there are no folders within <code>sub1</code>. We will create our <code>.feat</code> folder within <code>sub1</code>.</p>
+<p>This is what your data tab should look like (with the input data opened for show).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/data.png" class="img-fluid figure-img" width="350"></p>
+<figcaption class="figure-caption">FEAT Data</figcaption>
+</figure>
+</div>
+<p><em>Pre-stats</em></p>
+<p>The data has already been pre-processed, so set Motion correction to ‘None’ and uncheck BET. Your pre-stats should look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/pre_stats.png" class="img-fluid figure-img" width="350"></p>
+<figcaption class="figure-caption">Pre-stats</figcaption>
+</figure>
+</div>
+<p><em>Registration</em></p>
+<p>Nothing needs to be changed here.</p>
+<p><em>Stats</em></p>
+<p>Click on ‘Full Model Setup’ and do the following:</p>
+<ol type="1">
+<li>Keep the Number of original EVs is 1.</li>
+<li>Type PCC for the EV name.</li>
+<li>Select Custom (1 entry per volume) for the Basic shape. Click into the <code>sub1</code> folder and select <code>sub1_PCC.txt</code>. This is the mean time series of the PCC for sub-001 and is the statistical regressor in our GLM model. This is different from analyses of task-based data which will usually have an <code>events.tsv</code> file with the onset times for each regressor of interest.</li>
+</ol>
+<p>The first-level analysis will identify brain voxels that show a significant correlation with the seed (PCC) time series data.</p>
+<ol start="4" type="1">
+<li>Select None for Convolution, and uncheck both ‘Add temporal derivate’ and ‘Apply temporal filtering’.</li>
+</ol>
+<p>Your window should look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/glm_window.png" height="500" class="figure-img"></p>
+<figcaption class="figure-caption">GLM</figcaption>
+</figure>
+</div>
+<p>In the same General Linear Model window, click the Contrast &amp; F-tests tab, type PCC in the title, and click Done. A blue and red design matrix is displayed. You can close it.</p>
+<p><strong>Post-stats</strong>: Nothing needs to be changed here.</p>
+<p>You are ready to run the first-level analysis. Click Go to run. On BEAR, this should only take a few minutes.</p>
+</section>
+<section id="examining-the-feat-output" class="level3">
+<h3 class="anchored" data-anchor-id="examining-the-feat-output">Examining the FEAT output</h3>
+<p>To actually examine the output, go to the BEAR Portal and at the menu bar select Files ➜ /rds/projects/c/chechlmy-chbh-mricn/.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/bear_files.png" height="90" class="figure-img"></p>
+<figcaption class="figure-caption">BEAR Files</figcaption>
+</figure>
+</div>
+<p>Then go into <code>SBC/sub1.feat</code>, select <code>report.html</code> and click View (top left of the window). Navigate to the Post-stats tab and examine the outputs. It should look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/sub1_brain.png" height="1000" class="figure-img"></p>
+<figcaption class="figure-caption">sub1_brain</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="running-the-other-subjects-and-group-level-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-other-subjects-and-group-level-analysis">Running the other subjects and group-level analysis</h2>
+<p>We can now run the second and third subjects. As we only have three subjects, we could manually run the other two by just changing three things:</p>
+<ol type="1">
+<li>The fMRI data path</li>
+<li>The output directory</li>
+<li>The <code>sub_PCC.txt</code> path</li>
+</ol>
+<p>Whilst it would probably be quicker to do it manually in this case, it is not practical in other instances (e.g., more subjects, subjects with different number of scans etc.).. So, instead we will be scripting the first level FEAT analyses for the other two subjects.</p>
+<p>The setup for each analysis is saved as a specific file the <code>design.fsf</code> file within the FEAT output directory. We can see by opening the <code>design.fsf</code> file for sub1:</p>
+<pre><code>pwd (make sure you are in your MRICN directory)
+cd sub1.feat
+cat design.fsf</code></pre>
+<p>That it acts as a large function with its many variables corresponding to the options that we choose when setting up in the GUI. We just need to change three of these (the three mentioned above):</p>
+<pre><code>set fmri(outputdir) "/rds/projects/c/chechlmy-chbh-mricn/xxx/SBC/sub1"
+set feat_files(1) "/rds/projects/c/chechlmy-chbh-mricn/xxx/SBC/sub1/sub1/"
+set fmri(custom1) "/rds/projects/c/chechlmy-chbh-mricn/xxx/SBC/sub1/sub1_PCC.txt"</code></pre>
+<p>To do this, please copy the <code>run_feat.sh</code> script into your own <code>SBC</code> directory:</p>
+<pre><code>pwd (make sure you are in your SBC directory)
+cp /rds/projects/c/chechlmy-chbh-mricn/axs2210/SBC/run_feat.sh .</code></pre>
+<p>This is the script:</p>
+<pre><code>#!/bin/bash
+
+# Prompt the user for the University account name
+read -p "Please enter your University account name: " account_name
+
+# Define the base directory with the user-provided account name
+base_dir="/rds/projects/c/chechlmy-chbh-mricn/${account_name}/SBC"
+
+echo "Using base directory: $base_dir"
+
+# Loop over each subject's data
+for sub in sub2 sub3; do
+    # Define the input .nii.gz file for the subject
+    input_file="${base_dir}/${sub}/${sub}.nii.gz"
+    
+    # Define the output FEAT directory
+    output_dir="${base_dir}/${sub}.feat"
+    
+    # Define the custom EV file for the subject
+    custom_ev_file="${base_dir}/${sub}/${sub}_PCC.txt"
+    
+    # Define the .fsf file for the subject
+    design_file="${base_dir}/${sub}.fsf"
+    
+    # Copy the template design file from sub1 and modify it for the current subject
+    cp "${base_dir}/sub1.feat/design.fsf" "$design_file"
+    
+    # Replace the input file path in the design file
+    sed -i "s|set feat_files(1) \".*\"|set feat_files(1) \"${input_file}\"|g" "$design_file"
+    
+    # Replace the output FEAT directory in the design file
+    sed -i "s|set fmri(outputdir) \".*\"|set fmri(outputdir) \"${output_dir}\"|g" "$design_file"
+    
+    # Replace the custom EV file in the design file
+    sed -i "s|set fmri(custom1) \".*\"|set fmri(custom1) \"${custom_ev_file}\"|g" "$design_file"
+
+    # Run FEAT analysis
+    feat "$design_file"
+
+    # Remove the .fsf file from the SBC directory after running FEAT
+    rm -f "$design_file"
+done
+
+echo "FEAT analysis completed for sub2 and sub3."</code></pre>
+<p>The first line is always needed to run <code>bash</code> scripts. The rest of the code just replaces the 3 things we wanted to change for the defined subs, sub2 and sub3.</p>
+<p>You can run the code (from your SBC directory) by typing:</p>
+<p><code>bash run_feat.sh</code></p>
+<p>It should take about 5-10 minutes to run. If you have a look at the <code>report.html</code> file for both, they should look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/sub2_feat.png" height="1000" class="figure-img"></p>
+<figcaption class="figure-caption">sub2_feat</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/sub3_feat.png" height="1000" class="figure-img"></p>
+<figcaption class="figure-caption">sub2_feat</figcaption>
+</figure>
+</div>
+</section>
+<section id="running-the-group-level-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-group-level-analysis">Running the Group-level analysis</h2>
+<p>Ok, so now we have our FEAT directories for all three subjects, we can run the group level analysis. Open Feat by running <code>Feat &amp;</code> in your <code>SBC</code> directory.</p>
+<p>Do the following:</p>
+<p><strong>Data tab</strong></p>
+<ol type="1">
+<li>Change ‘First-level analysis’ to ‘Higher-level analysis’</li>
+<li>Keep the default option, for ‘Inputs are lower-level FEAT directories’.</li>
+<li>Keep the ‘Number of inputs’ as 3.</li>
+<li>Click the ‘Select FEAT directories’. Click the yellow folder on the right to select the FEAT folder that you had generated from each first-level analysis.</li>
+</ol>
+<p>By now, your window should look like this (before closing the Input window):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/group_data.png" height="300" class="figure-img"></p>
+<figcaption class="figure-caption">group_data</figcaption>
+</figure>
+</div>
+<ol start="5" type="1">
+<li>In ‘Selection’ stay in your current directory (it should be SBC), and in the bottom bar, type in <code>PCC_group</code> at the end of the file path. This is what mine looks like:</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/selection.png" height="300" class="figure-img"></p>
+<figcaption class="figure-caption">group_data</figcaption>
+</figure>
+</div>
+<p><strong>Stats</strong></p>
+<p>Click Full model setup. In the General Linear Model window, name the model ‘PCC’ and make sure the EVs are all 1s. The interface should look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/glm.png" height="300" class="figure-img"></p>
+<figcaption class="figure-caption">group_data</figcaption>
+</figure>
+</div>
+<p>After that, click ‘Done’ and close the GLM design matrix that pops up.</p>
+<p><strong>Post-stats</strong></p>
+<p>Change the Z-threshold from 3.1 to 2.3. This is because we only have data from 3 subjects, and so aren’t likely to see much at a high statistical threshold. If running analysis on a larger group, we would usually keep this at 3.1.</p>
+<p>Click ‘Go’ to run!</p>
+<p>This should again take about 10 minutes to run.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
