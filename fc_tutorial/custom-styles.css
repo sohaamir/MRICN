@@ -1,0 +1,87 @@
+/* Reset the margins and set the padding for the sidebar */
+body {
+    margin: 0;
+    padding: 0;
+    padding-right: 300px; /* Adjust this to the width of your TOC sidebar */
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/* Full width for the main content with auto margins for centering */
+article {
+    max-width: calc(100% - 400px); /* Subtract the width of the sidebar */
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/* Style for the floating TOC sidebar */
+#toc {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 400px; /* Width of the TOC sidebar */
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+/* Center all images within the main content */
+figure {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* If images are not wrapped in a figure, target the image directly */
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Style for code blocks */
+pre.sourceCode, pre code {
+    background-color: #ffcccb; /* Light pink background for blocks */
+    color: #800080; /* Purple text for blocks */
+    border: 1px solid black; /* Black border for blocks */
+    border-radius: 4px; /* Rounded corners for the code blocks */
+    padding: 5px 10px; /* Padding inside the code blocks */
+    overflow-x: auto; /* Horizontal scroll if the code is too wide */
+}
+
+/* Ensure that the code blocks are not wider than the container */
+pre.sourceCode {
+    width: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Style for inline code, only within paragraphs to avoid full width */
+p > code {
+    background-color: #ffcccb; /* Light pink background for inline */
+    color: #800080; /* Purple text for inline */
+    border-radius: 4px; /* Rounded corners for inline code */
+    padding: 0.2em 0.4em; /* Padding for inline code */
+    border: 1px solid black; /* Black border for inline code */
+    display: inline; /* Ensures it doesn't create a block-level element */
+}
+
+/* Additional style for any code element not in a pre element, for more general coverage */
+:not(pre) > code {
+    background-color: #ffcccb; /* Light pink background for inline */
+    color: #800080; /* Purple text for inline */
+    border: 1px solid black; /* Black border for inline code */
+    border-radius: 4px; /* Rounded corners for inline code */
+    padding: 0.2em 0.4em; /* Padding for inline code */
+    display: inline; /* Ensures it doesn't create a block-level element */
+}
+
+
+
+
+
+
+
+
+

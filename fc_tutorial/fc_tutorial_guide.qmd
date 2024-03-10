@@ -1,20 +1,32 @@
 ---
-title: "mricn_fc_tutorial"
-format: html
-editor: visual
+title: "Seed-based functional connectivity analysis of resting-state data using FSL"
+format:
+  html:
+    code-copy: true
+    css: custom-styles.css
+    toc: true
+    toc-title: "Functional connectivity analysis using FSL"
+    toc-depth: 3
+    toc-expand: true
+    toc-float:
+      collapsed: false
+      smooth-scroll: true
 ---
 
-# Performing a group-level functional connectivity analysis 
+This tutorial is based upon [FSL fMRI Resting State Seed-based Connectivity](https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/fsl_fmri_restingstate-sbc.html) by Dianne Paterson at the University of Arizona, which has been 
+adapted to run on the BEAR systems at the University of Birmingham, with additional material added.
 
-This guide borrows from one by Dianne Paterson at the University of Arizona,
-which you can find here: https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/fsl_fmri_restingstate-sbc.html 
-
-In this tutorial you will run a group-level functional connectivity analysis on 
+In this session, we will run a group-level functional connectivity analysis on 
 resting-state fMRI data of three participants. We will specifically look at the 
-functiona connectivity of the posterior cingulate cortex (PCC), a region of the 
-default mode network (DMN) that is commonly observed in resting-state data.
+functional connectivity of the posterior cingulate cortex (PCC), a region of the 
+default mode network (DMN) that is commonly observed in resting-state data. To do this, we
+will extract a mean-timeseries for a PCC seed region for each participant, running
+single-subject level analyses, one manually and bash scripting the other two. We will then
+run a group-level analysis using the single-level results. Finally, we will also take a
+look at [Neurosynth](https://neurosynth.org/) and how it can be used to generate
+functional connectivity maps.
 
-## Getting the data prepared
+## Preparing the data
 
 ### Setting up
 
@@ -83,34 +95,41 @@ be obscured, but you can always check which region you have loaded by looking at
 the panel on the bottom right).
 
 At this point, your window should look something like this:
-
-![Atlas](/Users/aamirsohail/Documents/GitHub/MRICN/assets/atlas_view.png){width=600}
-
+<br>
+<br>
+![](assets/atlas_view.png){width=900}
+<br>
+<br>
 To save the seed, click the save symbol which is the first of three icons on the
 bottom left of the window. 
-
-![Save PCC](../assets/save_atlas.png){width=550}
+<br>
+<br>
+![](assets/save_atlas.png){width=550}
 
 The window that opens up should be your project SBC directory. Open into the 
 `seed` folder and save your seed as `PCC`. 
 
 ### Extracting the time-series
 
-We now need to binarise the seed and to extract the mean timeseries.To do this, **leaving FSLeyes open**, go into your terminal (you may have to press Enter if some text about dc.DrawText is there) and type:
+We now need to binarise the seed and to extract the mean timeseries.To do this, **leaving
+FSLeyes open**, go into your terminal (you may have to press Enter if some text about
+dc.DrawText is there) and type:
 
 ```
 cd seed
 fslmaths PCC -thr 0.1 -bin PCC_bin
 ```
 
-In FSLeyes click File ➜ Add from file to compare PCC.nii.gz (before binarization) and PCC_bin.nii.gz (after binarization). You should note that the signal values are 
+In FSLeyes click File ➜ Add from file to compare PCC.nii.gz (before binarization) and
+PCC_bin.nii.gz (after binarization). You should note that the signal values are 
 all 1.0 for the binarized PCC.
 
-![Binary mask](../assets/binarized.png){width=300}
+![](assets/binarized.png){width=150}
 
 You can now close FSLeyes.
 
-For each subject, you want to extract the average time series from the region defined by the PCC mask. To calculate this value for sub1, do the following: 
+For each subject, you want to extract the average time series from the region defined by
+the PCC mask. To calculate this value for sub1, do the following: 
 
 ```
 cd ../sub1
@@ -149,9 +168,9 @@ ls -R
 ```
 You should see the following: 
 
-[sbc_folders.png]
+![](assets/sbc_folders.png){width=230}
 
-Please let me know if you do not get this!!
+**Please let me know if you do not get this!!**
 
 This is all we need to run the subject and group-level analyses using FEAT. 
 
@@ -172,32 +191,32 @@ Feat &
 We will run the first-level analysis for sub1. Set-up the following settings in 
 the respective tabs:
 
-*Data*
+**Data**
 
-`Select 4D data`: Click the folder icon, go into the `sub1` folder and choose 
-`sub1.nii.gz`. Click OK. You will see a box saying that the 'Input file has a TR 
+Select 4D data: Click the folder icon, go into the `sub1` folder and choose 
+sub1.nii.gz`. Click OK. You will see a box saying that the 'Input file has a TR 
 of 1...' this is fine, just click OK again.
 
-`Output directory`: Click into the `sub1` folder and click OK. Nothing will be in 
+Output directory: Click into the `sub1` folder and click OK. Nothing will be in 
 the right hand column, but that is because there are no folders within `sub1`. We 
 will create our `.feat` folder within `sub1`. 
 
 This is what your data tab should look like (with the input data opened for show).
 
-![FEAT Data](../assets/data.png){width=350}
+![](assets/data.png){width=700, height=350}
 
-*Pre-stats*
+**Pre-stats**
 
 The data has already been pre-processed, so set Motion correction to 'None' and 
 uncheck BET. Your pre-stats should look like this: 
 
-![Pre-stats](../assets/pre_stats.png){width=350}
+![](assets/pre_stats.png){width=350}
 
-*Registration*
+**Registration**
 
 Nothing needs to be changed here. 
 
-*Stats*
+**Stats**
 
 Click on 'Full Model Setup' and do the following: 
 
@@ -209,20 +228,23 @@ sub-001 and is the statistical regressor in our GLM model. This is different fro
 analyses of task-based data which will usually have an `events.tsv` file with the 
 onset times for each regressor of interest.
 
-The first-level analysis will identify brain voxels that show a significant correlation with the seed (PCC) time series data.
+The first-level analysis will identify brain voxels that show a significant correlation
+with the seed (PCC) time series data.
 
 4) Select None for Convolution, and uncheck both 'Add temporal derivate' and 
 'Apply temporal filtering'. 
 
 Your window should look like this: 
 
-![GLM](../assets/glm_window.png){width=300, height=500}
+![](assets/glm_window.png){width=300, height=500}
 
 In the same General Linear Model window, click the Contrast & F-tests tab, type 
 PCC in the title, and click Done. A blue and red design matrix is displayed. 
 You can close it.
 
-**Post-stats**: Nothing needs to be changed here.
+**Post-stats** 
+
+Nothing needs to be changed here.
 
 You are ready to run the first-level analysis. Click Go to run. On BEAR, this
 should only take a few minutes. 
@@ -230,15 +252,17 @@ should only take a few minutes.
 ### Examining the FEAT output
 
 To actually examine the output, go to the BEAR Portal and at the menu bar select 
-Files ➜ /rds/projects/c/chechlmy-chbh-mricn/. 
-
-![BEAR Files](../assets/bear_files.png){width=500, height=90}
-
+Files ➜ /rds/projects/c/chechlmy-chbh-mricn/
+<br>
+<br>
+![](assets/bear_files.png){width=800, height=120}
+<br>
+<br>
 Then go into `SBC/sub1.feat`, select `report.html` and click View (top left of
 the window). Navigate to the Post-stats tab and examine the outputs. It should 
 look like this:
-
-![sub1_brain](../assets/sub1_brain.png){width=300, height=1000}
+<br>
+![](../assets/sub1_brain.png){width=300, height=1000}
 
 ## Running the other subjects and the group-level analysis
 
@@ -259,7 +283,7 @@ within the FEAT output directory. We can see by opening the `design.fsf` file
 for sub1:
 
 ```
-pwd (make sure you are in your MRICN directory)
+pwd # make sure you are in your MRICN directory
 cd sub1.feat
 cat design.fsf
 ```
@@ -277,7 +301,7 @@ set fmri(custom1) "/rds/projects/c/chechlmy-chbh-mricn/xxx/SBC/sub1/sub1_PCC.txt
 To do this, please copy the `run_feat.sh` script into your own `SBC` directory:
 
 ```
-pwd (make sure you are in your SBC directory)
+pwd # make sure you are in your SBC directory
 cp /rds/projects/c/chechlmy-chbh-mricn/axs2210/SBC/run_feat.sh .
 ```
 
@@ -340,16 +364,20 @@ You can run the code (from your SBC directory) by typing:
 It should take about 5-10 minutes to run. If you have a look at the `report.html`
 file for both, they should look like this:
 
-![sub2_feat](../assets/sub2_feat.png){width=300, height=1000}
+**sub2**
 
-![sub2_feat](../assets/sub3_feat.png){width=300, height=1000}
-
+![](assets/sub2_feat.png){width=200, height=700}
+<br>
+**sub3**
+<br>
+![](assets/sub3_feat.png){width=200, height=700}
+<br>
+<br>
 ### Running the Group-level analysis
 
 Ok, so now we have our FEAT directories for all three subjects, we can run the 
-group level analysis. Open Feat by running `Feat &` in your `SBC` directory.
-
-Do the following: 
+group level analysis. Open Feat by running `Feat &` in your `SBC` directory. Here 
+is the group-level FEAT setup:
 
 **Data tab** 
 
@@ -360,19 +388,21 @@ Do the following:
 
 By now, your window should look like this (before closing the Input window):
 
-![group_data](../assets/group_data.png){width=350, height=300}
-
+![](assets/group_data.png){width=550, height=400}
+<br>
+<br>
 5) In 'Selection' stay in your current directory (it should be SBC), and in the 
 bottom bar, type in `PCC_group` at the end of the file path. This is what mine
 looks like: 
 
-![group_data](../assets/selection.png){width=350, height=300}
-
+![](assets/selection.png){width=550, height=400}
+<br>
 **Stats**
 
-Click Full model setup. In the General Linear Model window, name the model 'PCC' and make sure the EVs are all 1s. The interface should look like this:
+Click Full model setup. In the General Linear Model window, name the model 'PCC' and make
+sure the EVs are all 1s. The interface should look like this:
 
-![group_data](../assets/glm.png){width=300, height=300}
+![](assets/glm.png){width=300, height=300}
 
 After that, click 'Done' and close the GLM design matrix that pops up.
 
@@ -384,12 +414,12 @@ running analysis on a larger group, we would usually keep this at 3.1.
 
 Click 'Go' to run! 
 
-This should only take about 2-3 minutes to run. You can load the `report.html` 
-through the file browser as you did for the individual subjects. Click on the 
-'Results' tab, and then on 'Lower-level contrast 1 (PCC)'. Your results should 
+This should only take about 2-3 minutes. When this is running, you can load the
+`report.html` through the file browser as you did for the individual subjects. Click on
+the 'Results' tab, and then on 'Lower-level contrast 1 (PCC)'. Your results should 
 look like this: 
 
-![group_data](../assets/group_results.png){width=250, height=300}
+![](assets/group_results.png){width=600, height=700}
 
 These are voxels demonstrating significant functional connectivity with the PCC
 at a group-level (Z > 2.3).
@@ -407,7 +437,8 @@ module load FSLeyes/1.3.3-foss-2021a
 fsleyes &
 ```
 
-When in fsleyes, open up the standard brain (Navigate to the top menu and click on 'File ➜ Add standard' and select `MNI152_T1_2mm_brain.nii.gz`. Then add in our 
+When in fsleyes, open up the standard brain (Navigate to the top menu and click on 'File ➜
+Add standard' and select `MNI152_T1_2mm_brain.nii.gz`. Then add in our 
 contrast image (File  ➜ Add from file, and then go into the `PCC_group.gfeat` and
 then into `cope1.feat` and open the file `thresh_zstat1.nii.gz`). 
 
@@ -415,17 +446,19 @@ When that is opened, change the colour to 'Red-Yellow' and the 'Minimum' up to
 2.3 (The max should be around 3.12). If you set the voxel location to (42, 39, 52)
 your screen should look like this:
 
-![group_fsleyes](../assets/group_fsleyes.png){width=500, height=300}
-
+![](assets/group_fsleyes.png){width=700, height=400}
+<br>
 This is the map that we saw in the `report.html` file. In fact we can double 
 check this by changing the voxel co-ordinates to (45, 38, 46) our image matches 
 the one on the far right below: 
 
-![group_fsleyes](../assets/axial_slice.png){width=, height=300}
+**Our thresholded image in fsleyes**
+![](assets/axial_slice.png){width=, height=300}
+<br>
+**The FEAT output**
+![](assets/axial_feat.png){width=500, height=300}
 
-![group_fsleyes](../assets/axial_feat.png){width=500, height=300}
-
-## Bonus: Identifying regions of interest with Atlases and Neurosynth
+## Bonus: Identifying regions of interest with atlases and Neurosynth
 
 So we know which voxels demonstrate significant correlation with the PCC, but 
 what regions of the brain are they? Let's go through two ways by which we can 
@@ -439,50 +472,32 @@ is blocking the voxels. Change the Opacity to about half-way.
 
 We can now see that significant voxels of activity are mainly found in the: 
 
-Right superior lateral occipital cortex (sLOC)
+**Right superior lateral occipital cortex**
 
-![group_fsleyes](../assets/sloc.png){width=300, height=300}
+![](assets/sloc.png){width=300, height=300}
 
-Posterior cingulate cortex (PCC) / precuneus
+**Posterior cingulate cortex (PCC) / precuneus**
 
-![group_fsleyes](../assets/pcc_precuneus.png){width=300, height=300}
+![](../assets/pcc_precuneus.png){width=300, height=300}
 
-We can also use Neurosynth, a website where you can get the resting-state 
-functional connectivity of any voxel location of brain region. It does this by 
-extracting data from studies and performing a meta-analysis associated with 
-your voxel/region of interest. 
+We can also use [Neurosynth](https://neurosynth.org/), a website where you can get the
+resting-statefunctional connectivity of any voxel location or brain region. It does this
+by extracting data from studies and performing a meta-analysis on brain imaging studies
+that have results associated with your voxel/region of interest. 
 
 If you click the following link: 
 
-https://neurosynth.org/analyses/terms/posterior%20cingulate/
+[https://neurosynth.org/analyses/terms/posterior%20cingulate/](https://neurosynth.org/analyses/terms/posterior%20cingulate/)
 
-You will see regions demonstrating significant functional connectivity with the 
-posterior cingulate. If you type in (46, -70, 32) into Neurosynth, and then into
-the MNI co-ordinates in fsleyes (not as voxels, because Neurosynth works with 
-MNI space), you can see that in both cases the right superior lateral occipital
-cortex is activated. Note that the orientations of left and right are different.
+
+You will see regions demonstrating significant connectivity with the posterior cingulate.
+If you type `(46, -70, 32)` as co-ordinates, and then into the MNI co-ordinates section in
+fsleyes, **not as voxels, because Neurosynth works with MNI space**, you can see that in
+both cases the right superior lateral occipital cortex is activated. Note that the
+orientations of left and right are different.
 
 This is a great result given that we only have three subjects!
 
-![neurosynth](../assets/neurosynth.png){width=300, height=450}
-![group_fsleyes](../assets/fsleyes_sloc.png){width=400, height=450}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![](assets/neurosynth.png){width=300, height=450}
+![](assets/fsleyes_sloc.png){width=350, height=400}
 
