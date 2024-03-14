@@ -1,8 +1,8 @@
-## Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN)<br>University of Birmingham (Spring 2024)
+# Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN)<br>University of Birmingham (Spring 2024)
 
 These are the materials for my input to the MRICN module at the University of Birmingham. 
 
-### Aamir vs Chris (An introduction to neuroimaging data visualization and analysis using nibabel and nilearn)
+## Aamir vs Chris (An introduction to neuroimaging data visualization and analysis using nibabel and nilearn) (Optional)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sohaamir/MRICN/blob/main/aamir_vs_chris/aamir_vs_chris.ipynb) 
 [![Render Notebook](https://img.shields.io/badge/render-nbviewer-orange?logo=jupyter)](https://nbviewer.org/github/sohaamir/MRICN/blob/main/aamir_vs_chris/aamir_vs_chris.ipynb)
