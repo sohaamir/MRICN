@@ -1,6 +1,14 @@
-# Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN)<br>University of Birmingham (Spring 2024)
+# Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN) - University of Birmingham (Spring 2024)
 
 These are the materials for my input to the MRICN module at the University of Birmingham. 
+
+There are three main parts: 
+
+- aamir_vs_chris - this is an introduction to neuroimaging in Python using `nilearn` and `nibabel` (not necessary at all but there if you want to learn).
+- fc_conceptual_overview - this is a conceptual introduction to the type of functional connectivity we will be using in our practical (not completely necessary, but potentially useful for thining about what exactly we are measuring).
+- fc_tutorial_guide - this is the actual guide you will be doing, which performs a group-level functional connectivity analysis of resting-state data (necessary for everyone!)
+
+Here is a quick description of all three:
 
 ## Aamir vs Chris (An introduction to neuroimaging data visualization and analysis using nibabel and nilearn) (Optional)
 
@@ -47,3 +55,27 @@ else
     echo "Both brains are the same size."
 fi
 ```
+
+
+
+## A conceptual overview of functional connectivity (correlation between time-series)
+
+This notebook interactively demonstrates the basis of functional connectivity, as we will define it in our analysis. 
+
+Specifically, using `nilearn`, we can import 'resting-state' fMRI data from the [Richardson dataset](https://openneuro.org/datasets/ds000228/versions/1.0.0) where 'children and adults watched Disney Pixar’s “Partly Cloudy” while lying in the scanner. 
+
+We then parcellate the regions, and take a very crude approach to functional connectivity by getting the mean time-series for each region, and then correlating that with all of the other regions in the brain. Subsequently, we can then plot the most and least-connected regions, as well as the individual time-series for the regions demonstrating the strongest and weakest correlation (or 'connectivity'):
+
+<div align="center">
+  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_graph.png" width="100%">
+</div>
+
+
+
+<div align="center">
+  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_timeseries.png" width="100%">
+</div>
+
+
+
+## Seed-based functional connectivity analysis of resting-state data using FSL
