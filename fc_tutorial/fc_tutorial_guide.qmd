@@ -69,7 +69,7 @@ and create a new directory called `seed`:
 mkdir seed
 ```
 
-Now when you run `pwd` you should see:
+Now when you run `ls` you should see:
 
 ```
 seed sub1 sub2 sub3
@@ -86,13 +86,14 @@ We need to open the standard MNI template brain, select the PCC and make a mask.
 Here are the following steps: 
 
 1) Navigate to the top menu and click on `File ➜ Add standard` and select `MNI152_T1_2mm_brain.nii.gz`.
-2) When the image is open, click on `Settings ➜ Ortho View 1 ➜ Atlas panel`
-3) Click `Settings ➜ Ortho View 1 ➜ Atlas panel`. An atlas panel opens on the bottom right.
-4) Select `Atlas search` (red box, lower middle).
-5) Ensure Harvard-Oxford Cortical Structural Atlas is selected (purple highlighting).
-6) Type `cing` in the search box and check the Cingulate Gyrus, posterior division (lower right) so that it is overlaid on the standard brain. (The full name may 
-be obscured, but you can always check which region you have loaded by looking at 
+2) When the image is open, click on `Settings ➜ Ortho View 1 ➜ Atlases`. 
+An atlas panel opens on the bottom section.
+3) Select `Atlas information` (if it already hasn't loaded).
+4) Ensure Harvard-Oxford Cortical Structural Atlas is selected.
+5) Go into 'Atlas search' and type `cing` in the search box. Check the Cingulate Gyrus, posterior division (lower right) so that it is overlaid on the standard brain. (The full name may be obscured, but you can always check which region you have loaded by looking at 
 the panel on the bottom right).
+
+![](/assets/pcc.gif)
 
 At this point, your window should look something like this:
 <br>
@@ -111,7 +112,7 @@ The window that opens up should be your project SBC directory. Open into the
 
 ### Extracting the time-series
 
-We now need to binarise the seed and to extract the mean timeseries.To do this, **leaving
+We now need to binarise the seed and to extract the mean timeseries. To do this, **leaving
 FSLeyes open**, go into your terminal (you may have to press Enter if some text about
 dc.DrawText is there) and type:
 
@@ -120,9 +121,9 @@ cd seed
 fslmaths PCC -thr 0.1 -bin PCC_bin
 ```
 
-In FSLeyes click File ➜ Add from file to compare PCC.nii.gz (before binarization) and
-PCC_bin.nii.gz (after binarization). You should note that the signal values are 
-all 1.0 for the binarized PCC.
+In FSLeyes now click File ➜ Add from file, and select `PCC_bin` to compare PCC.nii.gz 
+(before binarization) and PCC_bin.nii.gz (after binarization). You should note that the 
+signal values are all 1.0 for the binarized PCC.
 
 ![](assets/binarized.png){width=150}
 
@@ -220,7 +221,7 @@ Nothing needs to be changed here.
 
 Click on 'Full Model Setup' and do the following: 
 
-1) Keep the Number of original EVs is 1.
+1) Keep the Number of original EVs as 1.
 2) Type PCC for the EV name.
 3) Select Custom (1 entry per volume) for the Basic shape. Click into the `sub1` 
 folder and select `sub1_PCC.txt`. This is the mean time series of the PCC for 
@@ -231,7 +232,7 @@ onset times for each regressor of interest.
 The first-level analysis will identify brain voxels that show a significant correlation
 with the seed (PCC) time series data.
 
-4) Select None for Convolution, and uncheck both 'Add temporal derivate' and 
+4) Select 'None' for Convolution, and uncheck both 'Add temporal derivate' and 
 'Apply temporal filtering'. 
 
 Your window should look like this: 
@@ -278,19 +279,21 @@ practical in other instances (e.g., more subjects, subjects with different
 number of scans etc.).. So, instead we will be scripting the first level FEAT 
 analyses for the other two subjects. 
 
+(Go back into your terminal, you don't need to open a new terminal or close Feat)
+
 The setup for each analysis is saved as a specific file the `design.fsf` file 
 within the FEAT output directory. We can see by opening the `design.fsf` file 
 for sub1:
 
 ```
-pwd # make sure you are in your MRICN directory
+pwd # make sure you are in your SBC directory e.g., blah/xxx/SBC
 cd sub1.feat
 cat design.fsf
 ```
 
-That it acts as a large function with its many variables corresponding to the 
+Feat acts as a large 'function' with its many variables corresponding to the 
 options that we choose when setting up in the GUI. We just need to change three 
-of these (the three mentioned above):
+of these (the three mentioned above) which in the `design.fsf` file correspond to:
 
 ```
 set fmri(outputdir) "/rds/projects/c/chechlmy-chbh-mricn/xxx/SBC/sub1"
@@ -301,6 +304,7 @@ set fmri(custom1) "/rds/projects/c/chechlmy-chbh-mricn/xxx/SBC/sub1/sub1_PCC.txt
 To do this, please copy the `run_feat.sh` script into your own `SBC` directory:
 
 ```
+cd ..
 pwd # make sure you are in your SBC directory
 cp /rds/projects/c/chechlmy-chbh-mricn/axs2210/SBC/run_feat.sh .
 ```
@@ -357,12 +361,19 @@ echo "FEAT analysis completed for sub2 and sub3."
 The first line is always needed to run `bash` scripts. The rest of the code just 
 replaces the 3 things we wanted to change for the defined subs, sub2 and sub3.
 
+You can have a look at the script yourself by typing `nano run_bash.sh`.
+
 You can run the code (from your SBC directory) by typing:
 
 `bash run_feat.sh`
 
-It should take about 5-10 minutes to run. If you have a look at the `report.html`
-file for both, they should look like this:
+It will ask you for your University account name, this is your ADF username 
+(axs2210 for me).
+
+This should take about 5-10 minutes to run. In the meantime feel free to follow me
+on GitHub @sohaamir and on Twitter @AamirNSohail (not part of the module).
+
+If you have a look at the `report.html`file for both, they should look like this:
 
 **sub2**
 
@@ -373,11 +384,11 @@ file for both, they should look like this:
 ![](assets/sub3_feat.png){width=200, height=700}
 <br>
 <br>
-### Running the Group-level analysis
+## Running the Group-level analysis
 
 Ok, so now we have our FEAT directories for all three subjects, we can run the 
-group level analysis. Open Feat by running `Feat &` in your `SBC` directory. Here 
-is the group-level FEAT setup:
+group level analysis. Close Feat and open a new Feat by running `Feat &` in your 
+`SBC` directory. Here is the group-level FEAT setup:
 
 **Data tab** 
 
@@ -391,20 +402,24 @@ By now, your window should look like this (before closing the Input window):
 ![](assets/group_data.png){width=550, height=400}
 <br>
 <br>
-5) In 'Selection' stay in your current directory (it should be SBC), and in the 
-bottom bar, type in `PCC_group` at the end of the file path. This is what mine
-looks like: 
+5) Keep 'Use lower-level copes ticked'.
+6) In 'Output directory' stay in your current directory (it should be SBC), and in the 
+bottom bar, type in `PCC_group` at the end of the file path. Don't worry about it 
+being empty, FSL will fill out the file path for us. If you click the folder again,
+this is what mine looks like: 
 
 ![](assets/selection.png){width=550, height=400}
 <br>
 **Stats**
 
-Click Full model setup. In the General Linear Model window, name the model 'PCC' and make
-sure the EVs are all 1s. The interface should look like this:
+Leave the 'Mixed effects: FLAME 1' and click Full model setup. 
+In the General Linear Model window, name the model 'PCC' and make sure the EVs are all 1s. The interface should look like this:
 
 ![](assets/glm.png){width=300, height=300}
 
 After that, click 'Done' and close the GLM design matrix that pops up.
+
+(You don't need to change anything in the 'Contrasts and F-tests' tab).
 
 **Post-stats**
 
@@ -427,7 +442,7 @@ at a group-level (Z > 2.3).
 ### Examining the output
 
 So, we have just ran our group-level analysis. Let's have a closer look at the 
-outputted data. Close your terminal, open a new one, go to your `SBC` directory 
+outputted data. Close FEAT and your terminal, open a new one, go to your `SBC` directory 
 and load up FSL and FSLeyes: 
 
 ```
@@ -437,8 +452,8 @@ module load FSLeyes/1.3.3-foss-2021a
 fsleyes &
 ```
 
-When in fsleyes, open up the standard brain (Navigate to the top menu and click on 'File ➜
-Add standard' and select `MNI152_T1_2mm_brain.nii.gz`. Then add in our 
+In fsleyes, open up the standard brain (Navigate to the top menu and click on 'File ➜
+Add standard' and select `MNI152_T1_2mm_brain.nii.gz`). Then add in our 
 contrast image (File  ➜ Add from file, and then go into the `PCC_group.gfeat` and
 then into `cope1.feat` and open the file `thresh_zstat1.nii.gz`). 
 
@@ -449,7 +464,7 @@ your screen should look like this:
 ![](assets/group_fsleyes.png){width=700, height=400}
 <br>
 This is the map that we saw in the `report.html` file. In fact we can double 
-check this by changing the voxel co-ordinates to (45, 38, 46) our image matches 
+check this by changing the voxel co-ordinates to (45, 38, 46). Our image matches 
 the one on the far right below: 
 
 **Our thresholded image in fsleyes**
@@ -461,16 +476,18 @@ the one on the far right below:
 ## Bonus: Identifying regions of interest with atlases and Neurosynth
 
 So we know which voxels demonstrate significant correlation with the PCC, but 
-what regions of the brain are they? Let's go through two ways by which we can 
+what regions of the brain are they in? Let's go through two ways in which we can 
 work this out. 
 
-We can simply just overlap an atlas on the image and see which regions the 
-activated voxels fall under. To do this, navigate to the top menu and click on 'Settings ➜ Ortho View 1 ➜ Atlases'. Then at the bottom middle of the window, 
-select the 'Harvard-Oxford Cortical Structural Atlas' and on the window directly
-next to it on the right, click 'Show/Hide'. The atlas should have loaded up but 
-is blocking the voxels. Change the Opacity to about half-way. 
+Firstly, we can simply just overlap an atlas on the image and see which regions the 
+activated voxels fall under. 
 
-We can now see that significant voxels of activity are mainly found in the: 
+To do this, navigate to the top menu and click on 'Settings ➜ Ortho View 1 ➜ Atlases'.
+Then at the bottom middle of the window, select the 'Harvard-Oxford Cortical Structural 
+Atlas' and on the window directly next to it on the right, click 'Show/Hide'. The atlas 
+should have loaded up but is blocking the voxels. Change the Opacity to about half-way. 
+
+By having a look at the 'Location' window (bottom left) we can now see that significant voxels of activity are mainly found in the: 
 
 **Right superior lateral occipital cortex**
 
@@ -480,10 +497,10 @@ We can now see that significant voxels of activity are mainly found in the:
 
 ![](../assets/pcc_precuneus.png){width=300, height=300}
 
-We can also use [Neurosynth](https://neurosynth.org/), a website where you can get the
-resting-statefunctional connectivity of any voxel location or brain region. It does this
-by extracting data from studies and performing a meta-analysis on brain imaging studies
-that have results associated with your voxel/region of interest. 
+Alternatively, we can also use [Neurosynth](https://neurosynth.org/), a website where you 
+can get the resting-statefunctional connectivity of any voxel location or brain region. 
+It does this by extracting data from studies and performing a meta-analysis on brain
+imaging studies that have results associated with your voxel/region of interest. 
 
 If you click the following link: 
 
@@ -491,13 +508,14 @@ If you click the following link:
 
 
 You will see regions demonstrating significant connectivity with the posterior cingulate.
-If you type `(46, -70, 32)` as co-ordinates, and then into the MNI co-ordinates section in
-fsleyes, **not as voxels, because Neurosynth works with MNI space**, you can see that in
-both cases the right superior lateral occipital cortex is activated. Note that the
-orientations of left and right are different.
+If you type `(46, -70, 32)` as co-ordinates in Neurosynth, and then into the MNI 
+co-ordinates section in fsleyes, **not into the voxel location, because Neurosynth works with MNI space**, you can see that in both cases the right superior lateral occipital 
+cortex is activated. Note that the orientations of left and right are different between 
+Neurosynth and fslsyes.
 
 This is a great result given that we only have three subjects!
 
 ![](assets/neurosynth.png){width=300, height=450}
 ![](assets/fsleyes_sloc.png){width=350, height=400}
 
+The end.
