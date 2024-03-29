@@ -13,18 +13,27 @@ format:
       smooth-scroll: true
 ---
 
-This tutorial is based upon [FSL fMRI Resting State Seed-based Connectivity](https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/fsl_fmri_restingstate-sbc.html) by Dianne Paterson at the University of Arizona, which has been 
-adapted to run on the BEAR systems at the University of Birmingham, with additional material added.
+> Created by Aamir Sohail, University of Birmingham, for the Magnetic 
+Resonance Imaging in Cognitive Neuroscience (MRICN) module, Spring Term 2024.
+
+This tutorial is based upon a previous tutorial: [FSL fMRI Resting State Seed-based Connectivity](https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/fsl_fmri_restingstate-sbc.html) by Dianne Paterson at the University of Arizona, but which has been 
+adapted to run on the BEAR systems at the University of Birmingham, and has some
+additional material added.
 
 In this session, we will run a group-level functional connectivity analysis on 
 resting-state fMRI data of three participants. We will specifically look at the 
 functional connectivity of the posterior cingulate cortex (PCC), a region of the 
-default mode network (DMN) that is commonly observed in resting-state data. To do this, we
-will extract a mean-timeseries for a PCC seed region for each participant, running
-single-subject level analyses, one manually and bash scripting the other two. We will then
-run a group-level analysis using the single-level results. Finally, we will also take a
-look at [Neurosynth](https://neurosynth.org/) and how it can be used to generate
-functional connectivity maps.
+default mode network (DMN) that is commonly found to be active in resting-state data. 
+
+To do this, we will:
+
+- extract a mean-timeseries for a PCC seed region for each participant,
+- run single-subject level analyses, one manually and bash scripting the other two, 
+- run a group-level analysis using the single-level results 
+- Finally, we will figure out which brain regions our active voxels are in, using
+  atlases in FSL, and [Neurosynth](https://neurosynth.org/).
+  
+There hopefully shouldn't be any issues, but pelase let me know if there are!
 
 ## Preparing the data
 
@@ -93,8 +102,8 @@ An atlas panel opens on the bottom section.
 5) Go into 'Atlas search' and type `cing` in the search box. Check the Cingulate Gyrus, posterior division (lower right) so that it is overlaid on the standard brain. (The full name may be obscured, but you can always check which region you have loaded by looking at 
 the panel on the bottom right).
 
-![](/assets/pcc.gif)
-
+![](assets/pcc.gif){width=900}
+<br>
 At this point, your window should look something like this:
 <br>
 <br>
@@ -263,6 +272,7 @@ Then go into `SBC/sub1.feat`, select `report.html` and click View (top left of
 the window). Navigate to the Post-stats tab and examine the outputs. It should 
 look like this:
 <br>
+<br>
 ![](../assets/sub1_brain.png){width=300, height=1000}
 
 ## Running the other subjects and the group-level analysis
@@ -361,9 +371,9 @@ echo "FEAT analysis completed for sub2 and sub3."
 The first line is always needed to run `bash` scripts. The rest of the code just 
 replaces the 3 things we wanted to change for the defined subs, sub2 and sub3.
 
-You can have a look at the script yourself by typing `nano run_bash.sh`.
+You can have a look at the script yourself by typing `cat run_bash.sh`.
 
-You can run the code (from your SBC directory) by typing:
+Run the code (from your SBC directory) by typing:
 
 `bash run_feat.sh`
 
@@ -371,7 +381,8 @@ It will ask you for your University account name, this is your ADF username
 (axs2210 for me).
 
 This should take about 5-10 minutes to run. In the meantime feel free to follow me
-on GitHub @sohaamir and on Twitter @AamirNSohail (not part of the module).
+on GitHub @[sohaamir](https://github.com/sohaamir) and on Twitter @[AamirNSohail](https://twitter.com/AamirNSohail) (not part of the module but always 
+appreciated 😊).
 
 If you have a look at the `report.html`file for both, they should look like this:
 
@@ -381,9 +392,11 @@ If you have a look at the `report.html`file for both, they should look like this
 <br>
 **sub3**
 <br>
+<br>
 ![](assets/sub3_feat.png){width=200, height=700}
 <br>
 <br>
+
 ## Running the Group-level analysis
 
 Ok, so now we have our FEAT directories for all three subjects, we can run the 
@@ -468,9 +481,13 @@ check this by changing the voxel co-ordinates to (45, 38, 46). Our image matches
 the one on the far right below: 
 
 **Our thresholded image in fsleyes**
+<br>
+<br>
 ![](assets/axial_slice.png){width=, height=300}
 <br>
 **The FEAT output**
+<br>
+<br>
 ![](assets/axial_feat.png){width=500, height=300}
 
 ## Bonus: Identifying regions of interest with atlases and Neurosynth
@@ -485,11 +502,12 @@ activated voxels fall under.
 To do this, navigate to the top menu and click on 'Settings ➜ Ortho View 1 ➜ Atlases'.
 Then at the bottom middle of the window, select the 'Harvard-Oxford Cortical Structural 
 Atlas' and on the window directly next to it on the right, click 'Show/Hide'. The atlas 
-should have loaded up but is blocking the voxels. Change the Opacity to about half-way. 
+should have loaded up but is blocking the voxels. Change the Opacity to about a 
+quarter. 
 
-By having a look at the 'Location' window (bottom left) we can now see that significant voxels of activity are mainly found in the: 
+![](assets/atlas.gif){width=900}
 
-**Right superior lateral occipital cortex**
+By having a look at the 'Location' window (bottom left) we can now see that significant voxels of activity are mainly found in the: **Right superior lateral occipital cortex**
 
 ![](assets/sloc.png){width=300, height=300}
 
@@ -497,17 +515,15 @@ By having a look at the 'Location' window (bottom left) we can now see that sign
 
 ![](../assets/pcc_precuneus.png){width=300, height=300}
 
+![](assets/voxel.png){width=150, height=150}
+<br>
 Alternatively, we can also use [Neurosynth](https://neurosynth.org/), a website where you 
 can get the resting-statefunctional connectivity of any voxel location or brain region. 
 It does this by extracting data from studies and performing a meta-analysis on brain
 imaging studies that have results associated with your voxel/region of interest. 
 
-If you click the following link: 
+If you click the following [link](https://neurosynth.org/analyses/terms/posterior%20cingulate/), you will see regions demonstrating significant connectivity with the posterior cingulate.
 
-[https://neurosynth.org/analyses/terms/posterior%20cingulate/](https://neurosynth.org/analyses/terms/posterior%20cingulate/)
-
-
-You will see regions demonstrating significant connectivity with the posterior cingulate.
 If you type `(46, -70, 32)` as co-ordinates in Neurosynth, and then into the MNI 
 co-ordinates section in fsleyes, **not into the voxel location, because Neurosynth works with MNI space**, you can see that in both cases the right superior lateral occipital 
 cortex is activated. Note that the orientations of left and right are different between 
@@ -517,5 +533,12 @@ This is a great result given that we only have three subjects!
 
 ![](assets/neurosynth.png){width=300, height=450}
 ![](assets/fsleyes_sloc.png){width=350, height=400}
+<br>
+Congrats! You have ran (I imagine) your first functional connectivity analysis!
 
-The end.
+And that is also the end of the MRICN module 😢
+
+![](assets/emotional.gif){width=350, height=400}
+<br>
+
+## It's been emotional.
