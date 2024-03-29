@@ -273,7 +273,7 @@ the window). Navigate to the Post-stats tab and examine the outputs. It should
 look like this:
 <br>
 <br>
-![](../assets/sub1_brain.png){width=300, height=1000}
+![](assets/sub1_brain.png){width=300, height=1000}
 
 ## Running the other subjects and the group-level analysis
 
@@ -513,7 +513,7 @@ By having a look at the 'Location' window (bottom left) we can now see that sign
 
 **Posterior cingulate cortex (PCC) / precuneus**
 
-![](../assets/pcc_precuneus.png){width=300, height=300}
+![](assets/pcc_precuneus.png){width=300, height=300}
 
 ![](assets/voxel.png){width=150, height=150}
 <br>
