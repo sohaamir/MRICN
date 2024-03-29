@@ -10,7 +10,9 @@ format:
     toc-expand: true
     toc-float:
       collapsed: false
-      smooth-scroll: true
+    smooth-scroll: true
+    include-in-header:
+      - assets/birmingham.html
 ---
 
 > Created by Aamir Sohail, University of Birmingham, for the Magnetic 
