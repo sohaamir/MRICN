@@ -386,7 +386,8 @@ This should take about 5-10 minutes to run. In the meantime feel free to follow 
 on GitHub @[sohaamir](https://github.com/sohaamir) and on Twitter @[AamirNSohail](https://twitter.com/AamirNSohail) (not part of the module but always 
 appreciated 😊).
 
-If you have a look at the `report.html`file for both, they should look like this:
+After they have finished running, if you have a look at the `report.html` file for both, 
+they should look like this:
 
 **sub2**
 
