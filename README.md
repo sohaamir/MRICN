@@ -71,7 +71,7 @@ Specifically, using `nilearn`, we can import 'resting-state' fMRI data from the 
 We then parcellate the regions, and take a very crude approach to functional connectivity by getting the mean time-series for each region, and then correlating that with all of the other regions in the brain. Subsequently, we can then plot the most and least-connected regions, as well as the individual time-series for the regions demonstrating the strongest and weakest correlation (or 'connectivity'):
 
 <div align="center">
-  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_graph.png" width="100%">
+  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_graph.png" width="80%">
 </div>
 <br>
 
@@ -79,7 +79,7 @@ We then parcellate the regions, and take a very crude approach to functional con
 
 
 <div align="center">
-  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_timeseries.png" width="100%">
+  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_timeseries.png" width="80%">
 </div>
 
 
@@ -99,5 +99,5 @@ To do this, we will:
 
 
 <div align="center">
-  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/group_fsleyes.gif" width="100%">
+  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/group_fsleyes.png" width="80%">
 </div>
