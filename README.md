@@ -5,7 +5,7 @@ These are the materials for my input to the MRICN module at the University of Bi
 There are three main parts: 
 
 - aamir_vs_chris - this is an introduction to neuroimaging in Python using `nilearn` and `nibabel` (not necessary at all but there if you want to learn).
-- fc_conceptual_overview - this is a conceptual introduction to the type of functional connectivity we will be using in our practical (not completely necessary, but potentially useful for thining about what exactly we are measuring).
+- fc_conceptual_overview - this is a conceptual introduction to the type of functional connectivity we will be using in our practical (not completely necessary, but potentially useful for understanding what exactly we are measuring).
 - fc_tutorial_guide - this is the actual guide you will be doing, which performs a group-level functional connectivity analysis of resting-state data (necessary for everyone!)
 
 Here is a quick description of all three:
@@ -32,6 +32,8 @@ Specifically, we go through the following uses:
 - Statistical Analysis of Brain Images
 
 We then can practically demonstrate a simple case of statistical analysis by comparing the size of two brains, my own and [Chris Gorgolewski's](https://github.com/chrisgorgo), a prime contributor to many open-source initiatives in neuroimaging, who's structural T1 scan is made publicly available through [OpenNeuro](openneuro.org). 
+
+Ultimately, we do this both using `nilearn` and FSL and end up with the exact same result regardless!
 
 Code for running the voxel comparison test in FSL: 
 
@@ -60,6 +62,8 @@ fi
 
 ## A conceptual overview of functional connectivity (correlation between time-series)
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sohaamir/MRICN/blob/main/fc_tutorial/fc_conceptual_overview.ipynb) [![Render Notebook](https://img.shields.io/badge/render-nbviewer-orange?logo=jupyter)](https://nbviewer.org/github/sohaamir/MRICN/blob/main/fc_tutorial/fc_conceptual_overview.ipynb)
+
 This notebook interactively demonstrates the basis of functional connectivity, as we will define it in our analysis. 
 
 Specifically, using `nilearn`, we can import 'resting-state' fMRI data from the [Richardson dataset](https://openneuro.org/datasets/ds000228/versions/1.0.0) where 'children and adults watched Disney Pixar’s “Partly Cloudy” while lying in the scanner. 
@@ -69,7 +73,9 @@ We then parcellate the regions, and take a very crude approach to functional con
 <div align="center">
   <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/fc_graph.png" width="100%">
 </div>
+<br>
 
+<br>
 
 
 <div align="center">
@@ -77,5 +83,21 @@ We then parcellate the regions, and take a very crude approach to functional con
 </div>
 
 
-
 ## Seed-based functional connectivity analysis of resting-state data using FSL
+
+[![GitHub Page](https://img.shields.io/badge/Workshop-Guide-blue?style=flat&logo=github)](https://sohaamir.github.io/MRICN/fc_tutorial_guide.html)
+
+The primary focus of today's workshop is to run a group-level functional connectivity analysis on resting-state fMRI data of three participants. We will specifically look at the functional connectivity of the posterior cingulate cortex (PCC), a region of the default mode network (DMN) that is commonly found to be active in resting-state data.
+
+To do this, we will:
+
+- extract a mean-timeseries for a PCC seed region for each participant,
+- run single-subject level analyses, one manually and bash scripting the other two,
+- run a group-level analysis using the single-level results
+- Finally, we will figure out which brain regions our active voxels are in, using atlases in FSL, and [Neurosynth](https://neurosynth.org/).
+
+
+
+<div align="center">
+  <img src="https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/assets/group_fsleyes.gif" width="100%">
+</div>
