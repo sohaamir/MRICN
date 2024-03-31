@@ -1,0 +1,19 @@
+site_name: MRICN Functional Connectivity Workshop Materials (Spring 2024)
+site_url: https://sohaamir.github.io/MRICN/mricn_docs
+site_description: These are the materials for my input to the MRICN module at the University of Birmingham.
+site_author: Aamir Sohail
+site_favicon: img/birmingham.png
+site_logo: img/birmingham.png
+
+markdown_extensions:
+  - attr_list
+nav:
+  - MRICN Homepage: home.md
+  - Working with neuroimaging data using Python with nilearn and nibabel: aamir_vs_chris.md
+  - A conceptual introduction to functional connectivity using nilearn: fc_conceptual_overview.md
+  - Running a functional connectivity analysis using FSL: fc_tutorial_guide.md
+
+theme:
+  name: readthedocs
+  features:  
+    - navigation.expand     # Left sidebar will expand all collapsible subsections by default.
