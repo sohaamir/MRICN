@@ -1,9 +1,9 @@
 # Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN) - University of Birmingham (Spring 2024)
 
-> Created by Aamir Sohail, University of Birmingham, for the Magnetic 
+> Created by [Aamir Sohail](https://sohaamir.github.io), University of Birmingham, for the Magnetic 
 Resonance Imaging in Cognitive Neuroscience (MRICN) module, Spring Term 2024.
 
-These are the materials for my input to the MRICN module at the University of Birmingham, which consist of three main parts: 
+These are the materials for my input to the MRICN module at the University of Birmingham, which consist of three parts: 
 
 - aamir_vs_chris - this is an introduction to neuroimaging in Python using `nilearn` and `nibabel` (not necessary at all but there if you want to learn).
 - fc_conceptual_overview - this is a conceptual introduction to the type of functional connectivity we will be using in our practical (not completely necessary, but potentially useful for understanding what exactly we are measuring).
@@ -65,23 +65,19 @@ fi
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sohaamir/MRICN/blob/main/fc_tutorial/fc_conceptual_overview.ipynb) [![Render Notebook](https://img.shields.io/badge/render-nbviewer-orange?logo=jupyter)](https://nbviewer.org/github/sohaamir/MRICN/blob/main/fc_tutorial/fc_conceptual_overview.ipynb)
 
-This notebook interactively demonstrates the basis of functional connectivity, as we will define it in our analysis. 
+This notebook interactively demonstrates the basis of functional connectivity, as we will define it for our analysis. 
 
 Specifically, using `nilearn`, we can import 'resting-state' fMRI data from the [Richardson dataset](https://openneuro.org/datasets/ds000228/versions/1.0.0) where 'children and adults watched Disney Pixar’s “Partly Cloudy” while lying in the scanner. 
 
-We then parcellate the regions, and take a very crude approach to functional connectivity by getting the mean time-series for each region, and then correlating that with all of the other regions in the brain. Subsequently, we can then plot the most and least-connected regions, as well as the individual time-series for the regions demonstrating the strongest and weakest correlation (or 'connectivity'):
-
-![](img/fc_graph.png)
-
+We then parcellate the regions, and take a very crude approach to functional connectivity by getting the mean time-series for each region, and then correlating that with all of the other regions in the brain. Subsequently, we can then plot the most and least strongly-connected regions, as well as the individual time-series for the regions demonstrating the strongest and weakest correlation (or 'connectivity'):
 <br>
-
-
+<br>
 ![](img/fc_timeseries.png)
 
 
 ## Seed-based functional connectivity analysis of resting-state data using FSL
 
-[![GitHub Page](https://img.shields.io/badge/Workshop-Guide-blue?style=flat&logo=github)](https://sohaamir.github.io/MRICN/fc_tutorial_guide.html)
+[![GitHub Page](https://img.shields.io/badge/Workshop-Guide-blue?style=flat&logo=github)](https://htmlpreview.github.io/?https://github.com/sohaamir/MRICN/blob/main/fc_tutorial/fc_tutorial_guide.html)
 
 The primary focus of today's workshop is to run a group-level functional connectivity analysis on resting-state fMRI data of three participants. We will specifically look at the functional connectivity of the posterior cingulate cortex (PCC), a region of the default mode network (DMN) that is commonly found to be active in resting-state data.
 
@@ -95,3 +91,6 @@ To do this, we will:
 
 
 ![](img/group_fsleyes.png)
+<br>
+<br>
+Click the 'Next' button below to get started! &rarr; &rarr; &rarr;
