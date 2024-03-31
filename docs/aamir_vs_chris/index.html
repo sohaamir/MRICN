@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Aamir Sohail" /><link rel="canonical" href="https://sohaamir.github.io/mricn_docs/aamir_vs_chris/" />
+      <link rel="shortcut icon" href="../img/birmingham.png" />
+    <title>Working with neuroimaging data using Python with nilearn and nibabel - MRICN Functional Connectivity Workshop Materials (Spring 2024)</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Working with neuroimaging data using Python with nilearn and nibabel";
+        var mkdocs_page_input_path = "aamir_vs_chris.md";
+        var mkdocs_page_url = "/mricn_docs/aamir_vs_chris/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MRICN Functional Connectivity Workshop Materials (Spring 2024)
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../home/">MRICN Homepage</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Working with neuroimaging data using Python with nilearn and nibabel</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-is-google-colab">What is Google Colab?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#data-visualization-and-plotting">Data visualization and plotting</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#watch-youtube">Watch YouTube...</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#what-are-nibabel-and-nilearn">What are nibabel and nilearn?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#nibabel">nibabel</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nilearn">nilearn</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#what-can-we-do-with-our-data-using-nibabel">What can we do with our data using nibabel?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#checking-the-data-shape-and-type">Checking the data shape and type</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#accessing-the-nifti-metadata">Accessing the NIFTI metadata</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-visualization-and-comparison">Data visualization and comparison</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-animated-gifs-from-mri-scans">Creating Animated GIFs from MRI Scans</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#what-can-we-do-with-our-data-using-nilearn">What can we do with our data using nilearn?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#visualizing-brain-overlays">Visualizing Brain Overlays</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#plotting-brain-images">Plotting Brain Images</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#statistical-analysis-of-brain-images">Statistical Analysis of Brain Images</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-transformation-and-manipulation">Data Transformation and Manipulation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#seeing-who-has-the-bigger-brain-using-nilearn-and-fsl">Seeing who has the bigger brain using nilearn and FSL</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#using-nilearn">Using nilearn</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#using-fslstats">Using fslstats</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../fc_conceptual_overview/">A conceptual introduction to functional connectivity using nilearn</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../fc_tutorial_guide/">Running a functional connectivity analysis using FSL</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MRICN Functional Connectivity Workshop Materials (Spring 2024)</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Working with neuroimaging data using Python with nilearn and nibabel</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p><a href="https://colab.research.google.com/github/sohaamir/MRICN/blob/main/aamir_vs_chris/aamir_vs_chris.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<h1 id="who-has-the-bigger-brain-me-or-chris-gorgolewski-a-gentle-introduction-to-manipulating-neuroimaging-data-using-python-with-nilearn-and-nibabel"><strong>Who has the bigger brain, me or Chris Gorgolewski? A gentle introduction to manipulating neuroimaging data using Python with <code>nilearn</code> and <code>nibabel</code></strong></h1>
+<h2 id="what-is-google-colab">What is Google Colab?</h2>
+<p><strong>Google Colaboratory</strong> is is a free cloud-based platform provided by Google that offers a Jupyter notebook environment for writing and executing Python code. It is primarily used for data analysis tasks but can also be used for general-purpose Python programming. It has many benefits when working with data (including neuroimaging data) such as:</p>
+<ol>
+<li>Free access</li>
+<li>Cloud-based hosting (available everywhere)</li>
+<li>GPU/TPU Support (lots of processing power)</li>
+<li>External Data Access (import data GitHub, Google Drive, local machine)</li>
+</ol>
+<p>It is an interactive environment similar to Anaconda, but with certain advantages (like those mentioned above). Similarly, Colab allows for users to run code in small chunks called 'cells', displaying any output such as images directly within the notebook as well. The programming language used by these notebooks is <code>Python</code>, which it organises in the form of <code>Colab Notebooks</code>.</p>
+<p>What can we do in Google Colab? We can do a whole bunch of things...</p>
+<h3 id="data-visualization-and-plotting">Data visualization and plotting</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.title(&quot;Sine Wave&quot;)
+plt.xlabel(&quot;X&quot;)
+plt.ylabel(&quot;sin(X)&quot;)
+plt.show()
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_5_0.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+def mandelbrot(c, max_iter):
+    z = 0
+    n = 0
+    while abs(z) &lt;= 2 and n &lt; max_iter:
+        z = z*z + c
+        n += 1
+    return n
+
+def mandelbrot_image(xmin, xmax, ymin, ymax, width=10, height=10, max_iter=256):
+    # Create a width x height grid of complex numbers
+    x = np.linspace(xmin, xmax, width * 100)
+    y = np.linspace(ymin, ymax, height * 100)
+    X, Y = np.meshgrid(x, y)
+    C = X + 1j * Y
+
+    # Compute Mandelbrot set
+    img = np.zeros(C.shape, dtype=int)
+    for i in range(width * 100):
+        for j in range(height * 100):
+            img[j, i] = mandelbrot(C[j, i], max_iter)
+
+    # Plotting
+    plt.figure(figsize=(width, height))
+    plt.imshow(img, extent=(xmin, xmax, ymin, ymax), cmap='hot')
+    plt.colorbar()
+    plt.title(&quot;Mandelbrot Set&quot;)
+    plt.show()
+
+# Parameters defining the extent of the region in the complex plane we're going to plot
+xmin, xmax, ymin, ymax = -2.0, 0.5, -1.25, 1.25
+width, height = 10, 10
+max_iter = 256
+
+mandelbrot_image(xmin, xmax, ymin, ymax, width, height, max_iter)
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_6_0.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<h3 id="watch-youtube">Watch YouTube...</h3>
+<pre><code class="language-python">from IPython.display import YouTubeVideo
+
+# Embedding the YouTube video
+YouTubeVideo('GtL1huin9EE', width=800, height=450)
+</code></pre>
+<p><iframe
+    width="600"
+    height="450"
+    src="https://www.youtube.com/embed/GtL1huin9EE"
+    frameborder="0"
+    allowfullscreen
+
+></iframe>
+</p>
+<p><img alt="Cute Cat" src="https://nipy.org/nibabel/_static/nibabel-logo.svg" /></p>
+<h2 id="what-are-nibabel-and-nilearn">What are nibabel and nilearn?</h2>
+<h3 id="nibabel">nibabel</h3>
+<p><code>nibabel</code> is designed to provide a simple, uniform interface to various neuroimaging file formats, allowing users to easily manipulate neuroimaging data within Python scripts or interactive environments like Jupyter notebooks.</p>
+<p>Key features and capabilities of <code>nibabel</code> include:</p>
+<ul>
+<li>
+<p>Reading and Writing Neuroimaging Data: <code>nibabel</code> allows you to read data from disk into Python data structures and write data back to disk in various neuroimaging formats.</p>
+</li>
+<li>
+<p>Data Manipulation: Once loaded into Python, neuroimaging data can be manipulated just like any other data structure. This includes operations like slicing, statistical analyses, and visualization.</p>
+</li>
+<li>
+<p>Header Access: <code>nibabel</code> provides access to the headers of neuroimaging files, which contain metadata about the imaging data such as dimensions, voxel sizes, data type, and orientation. This is crucial for understanding and correctly interpreting the data.</p>
+</li>
+<li>
+<p>Affine Transformations: It supports affine transformations that describe the relationship between voxel coordinates and world coordinates, enabling spatial operations on the data.</p>
+</li>
+</ul>
+<h3 id="nilearn">nilearn</h3>
+<p><code>nilearn</code> is a Python library designed to facilitate fast and easy statistical learning analysis and manipulation of neuroimaging data. It builds on libraries such as numpy, scipy, scikit-learn, and pandas, offering a comprehensive toolkit for neuroimaging data processing, with a focus on machine learning applications. <code>nilearn</code> aims to make it easier for researchers in neuroscience and machine learning to use Python for sophisticated imaging data analysis and visualization.</p>
+<p>In this intro, we won't be focusing on the more advanced uses such as those involving machine learning, but just leveraging it's ability to perform simple functions with structural MRI images.</p>
+<p>To this end, one of the strengths of <code>nilearn</code> is its powerful and flexible plotting capabilities, designed specifically for neuroimaging data. It provides functions to visualize MRI volumes, statistical maps, connectome diagrams, and more, with minimal code.</p>
+<p>Before we get started, we need to install the necessary packages and import the NIFTIs. We will use T1-weighted structural MRI scans, one of myself and one that I copied from <a href="https://openneuro.org/">OpenNeuro</a>, a website for openly available neuroimaging datasets.</p>
+<pre><code class="language-python"># Install necessary packages
+%%capture
+!pip install nibabel matplotlib nilearn
+!pip install imageio
+
+# Download the MRI scan files from GitHub and rename them
+!wget https://raw.githubusercontent.com/sohaamir/MRICN/main/niftis/chris_T1.nii -O chris_brain.nii
+!wget https://raw.githubusercontent.com/sohaamir/MRICN/main/niftis/aamir_T1.nii -O aamir_brain.nii
+
+import nibabel as nib
+import nilearn as nil
+import numpy as np
+import pylab as plt
+import matplotlib.pyplot as plt
+import imageio
+import os
+</code></pre>
+<h2 id="what-can-we-do-with-our-data-using-nibabel">What can we do with our data using <code>nibabel</code>?</h2>
+<h3 id="checking-the-data-shape-and-type">Checking the data shape and type</h3>
+<p>The code below loads a NIfTI image and prints out its shape and data type. The shape tells us the dimensions of the image, which typically includes the number of voxels in each spatial dimension (X, Y, Z) and sometimes time or other dimensions. The data type indicates the type of data used to store voxel values, such as float or integer types.</p>
+<pre><code class="language-python"># Load the first image using nibabel
+t1_aamir_path = 'aamir_brain.nii'
+t1_aamir_image = nib.load(t1_aamir_path)
+
+# Now let's check the image data shape and type
+print(&quot;Aamir's image shape:&quot;, t1_aamir_image.shape)
+print(&quot;Aamir's image data type:&quot;, t1_aamir_image.get_data_dtype())
+</code></pre>
+<pre><code>Aamir's image shape: (192, 256, 256)
+Aamir's image data type: int16
+</code></pre>
+<h3 id="accessing-the-nifti-metadata">Accessing the NIFTI metadata</h3>
+<p>Each NIfTI file also comes with a header containing metadata about the image. Here we've extracted the voxel sizes, which represent the physical space covered by each voxel, and the image orientation, which tells us how the image data is oriented in space.</p>
+<pre><code class="language-python"># Access the image header
+header_aamir = t1_aamir_image.header
+
+# Print some header information
+print(&quot;Aamir's voxel size:&quot;, header_aamir.get_zooms())
+print(&quot;Aamir's image orientation:&quot;, nib.aff2axcodes(t1_aamir_image.affine))
+</code></pre>
+<pre><code>Aamir's voxel size: (0.94, 0.9375, 0.9375)
+Aamir's image orientation: ('R', 'A', 'S')
+</code></pre>
+<h3 id="data-visualization-and-comparison">Data visualization and comparison</h3>
+<p>We can visualize the data from our NIfTI file by converting it to a numpy array and then using <code>matplotlib</code> to display a slice. In this example, we've displayed an axial slice from the middle of the brain, which is a common view for inspecting T1-weighted images.</p>
+<pre><code class="language-python"># Get the image data as a numpy array
+aamir_data = t1_aamir_image.get_fdata()
+
+# Display one axial slice of the image
+aamir_slice_index = aamir_data.shape[1] // 2  # Get the middle index along Z-axis
+plt.imshow(aamir_data[:, :, aamir_slice_index], cmap='gray')
+plt.title('Middle Axial Slice of Aamirs Brain')
+plt.axis('off')  # Hide the axis to better see the image
+plt.show()
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_19_0.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<p>Now we can load a second T1-weighted image and printed its shape for comparison. By comparing the shapes of the two images, we can determine if they are from the same scanning protocol or if they need to be co-registered for further analysis.</p>
+<pre><code class="language-python"># Load the second image
+t1_chris_path = 'chris_brain.nii'
+t1_chris_image = nib.load(t1_chris_path)
+
+# Let's compare the shapes of the two images
+print(&quot;First image shape:&quot;, t1_aamir_image.shape)
+print(&quot;Second image shape:&quot;, t1_chris_image.shape)
+</code></pre>
+<pre><code>First image shape: (192, 256, 256)
+Second image shape: (176, 240, 256)
+</code></pre>
+<p>Now that we have loaded both T1-weighted MRI images, we are interested in visualizing and comparing them directly. To do this, we will extract the data from the second image, <code>chris_brain.nii</code>, and display a slice from it alongside a slice from the first image, <code>aamir_brain.nii</code>.</p>
+<pre><code class="language-python"># Get data for the second image
+chris_data = t1_chris_image.get_fdata()
+chris_slice_index = chris_data.shape[1] // 2  # Get the middle index along Z-axis
+
+# Display a slice from both images side by side
+fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+
+# Plot first image slice
+axes[0].imshow(aamir_data[:, :, aamir_slice_index], cmap='gray')
+axes[0].set_title('aamir_brain.nii')
+axes[0].axis('off')
+
+# Plot second image slice
+axes[1].imshow(chris_data[:, :, chris_slice_index], cmap='gray')
+axes[1].set_title('chris_brain.nii')
+axes[1].axis('off')
+
+plt.show()
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_23_0.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<h3 id="creating-animated-gifs-from-mri-scans">Creating Animated GIFs from MRI Scans</h3>
+<p>To visualize the structure of the brain in MRI scans, we can create an animated GIF that scrolls through each slice of the scan. This is particularly useful for examining the scan in a pseudo-3D view by observing one slice at a time through the entire depth of the brain.</p>
+<p>The following code defines a function <code>create_gif_from_mri_normalized</code> that processes an MRI scan file and produces an animated GIF. The MRI data is first normalized by clipping the top and bottom 1% of pixel intensities, which enhances contrast and detail. The scan is then sliced along the sagittal plane, and each slice is converted to an 8-bit grayscale image and compiled into an animated GIF. This normalization process ensures that the resulting GIF maintains visual consistency across different scans.</p>
+<p>We apply this function to two MRI scans, <code>aamir_brain.nii</code> and <code>chris_brain.nii</code>, creating a GIF for each. These GIFs, named 'aamir_brain_normalized.gif' and 'chris_brain_normalized.gif', respectively, will allow us to visually assess and compare the scans.</p>
+<pre><code class="language-python"># Function to normalize and create a GIF from a 3D MRI scan in the sagittal plane
+def create_gif_from_mri_normalized(path, gif_name):
+    # Load the image and get the data
+    img = nib.load(path)
+    data = img.get_fdata()
+
+    # Normalize the data for better visualization
+    # Clip the top and bottom 1% of pixel intensities
+    p2, p98 = np.percentile(data, (2, 98))
+    data = np.clip(data, p2, p98)
+    data = (data - np.min(data)) / (np.max(data) - np.min(data))
+
+    # Prepare to capture the slices
+    slices = []
+    # Sagittal slices are along the x-axis, hence data[x, :, :]
+    for i in range(data.shape[0]):
+        slice = data[i, :, :]
+        slice = np.rot90(slice)  # Rotate or flip the slice if necessary
+        slices.append((slice * 255).astype(np.uint8))  # Convert to uint8 for GIF
+
+    # Create a GIF
+    imageio.mimsave(gif_name, slices, duration=0.1)  # duration controls the speed of the GIF
+
+# Create GIFs from the MRI scans
+create_gif_from_mri_normalized('aamir_brain.nii', 'aamir_brain_normalized.gif')
+create_gif_from_mri_normalized('chris_brain.nii', 'chris_brain_normalized.gif')
+
+</code></pre>
+<p>After generating the GIFs for each MRI scan, we can now display them directly within the notebook. This visualization provides us with an interactive view of the scans, making it easier to observe the entire brain volume as a continuous animation.</p>
+<p>Below, we use the <code>IPython.display</code> module to render the GIFs in the notebook. The first GIF corresponds to Aamir's brain scan, and the second GIF corresponds to Chris's brain scan. These inline animations can be a powerful tool for presentations, education, and qualitative analysis, offering a dynamic view into the MRI data without the need for specialized neuroimaging software.</p>
+<pre><code class="language-python">from IPython.display import Image, display
+
+# Display the GIF for Aamir's MRI
+display(Image(filename='aamir_brain_normalized.gif'))
+
+# Display the GIF for Chris's MRI
+display(Image(filename='chris_brain_normalized.gif'))
+</code></pre>
+<pre><code>&lt;IPython.core.display.Image object&gt;
+
+
+
+&lt;IPython.core.display.Image object&gt;
+</code></pre>
+<h2 id="what-can-we-do-with-our-data-using-nilearn">What can we do with our data using <code>nilearn</code>?</h2>
+<h3 id="visualizing-brain-overlays">Visualizing Brain Overlays</h3>
+<p>With <code>nilearn</code>, we can create informative visualizations of brain images. One common technique is to overlay a statistical map or a labeled atlas on top of an anatomical image for better spatial context. Here, we will demonstrate how to overlay a standard atlas on our T1-weighted MRI images. This allows us to see how different brain regions delineated by the atlas correspond to structures within the actual brain images.</p>
+<pre><code class="language-python">from nilearn import plotting, datasets
+
+# Load the atlas
+atlas_data = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
+
+# Plotting the atlas map overlay on the first image
+plotting.plot_roi(atlas_data.maps, bg_img='aamir_brain.nii', title=&quot;Aamir's Brain with Atlas Overlay&quot;, display_mode='ortho', cut_coords=(0, 0, 0), cmap='Paired')
+
+# Plotting the atlas map overlay on the second image
+plotting.plot_roi(atlas_data.maps, bg_img='chris_brain.nii', title=&quot;Chris's Brain with Atlas Overlay&quot;, display_mode='ortho', cut_coords=(0, 0, 0), cmap='Paired')
+
+plotting.show()
+</code></pre>
+<pre><code>Added README.md to /root/nilearn_data
+
+
+Dataset created in /root/nilearn_data/fsl
+
+Downloading data from https://www.nitrc.org/frs/download.php/9902/HarvardOxford.tgz ...
+
+
+ ...done. (1 seconds, 0 min)
+Extracting data from /root/nilearn_data/fsl/c4d84bbdf5c3325f23e304cdea1e9706/HarvardOxford.tgz..... done.
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_30_2.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_30_3.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<p>Note that the atlas is formatted correctly on Chris's brain but not Aamir's. <strong>Why do you think this is?</strong></p>
+<h3 id="plotting-brain-images">Plotting Brain Images</h3>
+<p><code>nilearn</code> also offers convenient functions for visualizing neuroimaging data. It can handle various brain imaging data formats and provides easy-to-use tools for plotting. Here, we will use <code>nilearn</code> to plot axial slices from our two T1-weighted MRI images, <code>aamir_brain.nii</code> and <code>chris_brain.nii</code>. This is a bit different to how we plotted the data before using <code>nibabel</code>.</p>
+<pre><code class="language-python">from nilearn import plotting
+
+# Plotting the axial view of Aamir's brain
+aamir_img = 'aamir_brain.nii'
+plotting.plot_anat(aamir_img, title=&quot;Axial View of Aamir's Brain&quot;, display_mode='z', cut_coords=10)
+
+# Plotting the axial view of Chris's brain
+chris_img = 'chris_brain.nii'
+plotting.plot_anat(chris_img, title=&quot;Axial View of Chris's Brain&quot;, display_mode='z', cut_coords=10)
+
+plotting.show()
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_33_0.png" style="display:block; margin-left:auto; margin-right:auto; width:700px" /></p>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_33_1.png" style="display:block; margin-left:auto; margin-right:auto; width:700px" /></p>
+<h3 id="statistical-analysis-of-brain-images">Statistical Analysis of Brain Images</h3>
+<p>With <code>nilearn</code>, we can also perform statistical analysis on the brain imaging data. For instance, we can calculate and plot the mean intensity of the brain images across slices. This can reveal differences in signal intensity and distribution between the two scans, which might be indicative of varying scan parameters or anatomical differences.</p>
+<pre><code class="language-python">import numpy as np
+from nilearn.image import mean_img
+
+# Calculating the mean image for both scans
+mean_aamir_img = mean_img(aamir_img)
+mean_chris_img = mean_img(chris_img)
+
+# Plotting the mean images
+plotting.plot_epi(mean_aamir_img, title=&quot;Mean Image of Aamir's Brain&quot;)
+plotting.plot_epi(mean_chris_img, title=&quot;Mean Image of Chris's Brain&quot;)
+
+plotting.show()
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_35_0.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_35_1.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<h3 id="data-transformation-and-manipulation">Data Transformation and Manipulation</h3>
+<p><code>nilearn</code> is not just for plotting—it also provides tools for image manipulation and transformation. We can apply operations such as smoothing, filtering, or masking to the brain images. Below, we will smooth the images using a Gaussian filter, which is often done to reduce noise and improve signal-to-noise ratio before further analysis.</p>
+<p>Since this is usually performed just on the brain (i.e., not the entire image), let's smooth the extracted brain using FSL.</p>
+<pre><code class="language-python">!wget https://raw.githubusercontent.com/sohaamir/MRICN/main/niftis/chris_bet.nii -O chris_bet.nii
+!wget https://raw.githubusercontent.com/sohaamir/MRICN/main/niftis/aamir_bet.nii -O aamir_bet.nii
+
+from nilearn import image
+from nilearn.image import smooth_img
+
+# Load the skull-stripped brain images
+chris_img = image.load_img('chris_bet.nii')
+aamir_img = image.load_img('aamir_bet.nii')
+
+# Applying a Gaussian filter for smoothing (with 4mm FWHM)
+smoothed_aamir_img = smooth_img(aamir_img, fwhm=4)
+smoothed_chris_img = smooth_img(chris_img, fwhm=4)
+
+# Save the smoothed images to disk
+smoothed_aamir_img.to_filename('smoothed_aamir_brain.nii')
+smoothed_chris_img.to_filename('smoothed_chris_brain.nii')
+
+# Plotting the smoothed images
+plotting.plot_anat(smoothed_aamir_img, title=&quot;Smoothed Aamir's Brain&quot;)
+plotting.plot_anat(smoothed_chris_img, title=&quot;Smoothed Chris's Brain&quot;)
+
+plotting.show()
+</code></pre>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_37_1.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<p><img alt="" src="../img/aamir_vs_chris_files/aamir_vs_chris_37_2.png" style="display:block; margin-left:auto; margin-right:auto; width:600px" /></p>
+<h2 id="seeing-who-has-the-bigger-brain-using-nilearn-and-fsl">Seeing who has the bigger brain using nilearn and FSL</h2>
+<p><strong>Meet Chris:</strong></p>
+<p><img src="https://avatars.githubusercontent.com/u/238759?v=4" width="300" alt="Chris"></p>
+<p><a href="https://www.linkedin.com/in/chrisgorgolewski/">He's</a> a Senior Product Manager at Google. Before that he was Co-Director of the Center for Reproducible Neuroscience at Stanford University. Before that he was a postdoc at the Max Planck Institute for Human Cognitive and Brain Sciences, and before that he completed a PhD at the University of Edinburgh.</p>
+<p><strong>Meet Aamir:</strong></p>
+<p><img src="https://avatars.githubusercontent.com/u/35841800?v=4" width="300" alt="Aamir"></p>
+<p><a href="https://sohaamir.github.io/">He's</a> a PhD student in Psychology at the University of Birmingham. Before that he worked as a Junior Research Fellow and Operations Support at the University of Reading. Before that he did an MSc in Brain Imaging at the University of Nottingham, and before that he completed a BSc in Biomedical Science at Imperial College London.</p>
+<p>Given these two profiles, <strong>how can we discern who is more intelligent?</strong></p>
+<p>This is a question that has puzzled psychologists for way over a century, but let's take the opinion that you can generally who is more intelligent by the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7440690/">size of their brain</a>.</p>
+<p>Again, let's take the two brain images that I have skull-stripped using BET in FSL.</p>
+<p><strong>Chris's brain</strong>
+<img src="https://raw.githubusercontent.com/sohaamir/MRICN/main/aamir_vs_chris/assets/chris_brain.png" width="900" alt="Aamir"></p>
+<p><strong>Aamir's brain</strong>
+<img src="https://raw.githubusercontent.com/sohaamir/MRICN/main/aamir_vs_chris/assets/aamir_brain.png" width="900" alt="Aamir"></p>
+<p><strong>So now let's see who's brain is bigger (place your BETs!)</strong>
+(pun intended)</p>
+<h3 id="using-nilearn">Using nilearn</h3>
+<pre><code class="language-python">from nilearn import image
+
+# Convert the images to data arrays
+chris_data = chris_img.get_fdata()
+aamir_data = aamir_img.get_fdata()
+
+# Calculate the size by counting the non-zero voxels in the brain mask
+chris_size = np.sum(chris_data &gt; 0)
+aamir_size = np.sum(aamir_data &gt; 0)
+
+# Print out the sizes and determine which is larger
+print(f&quot;Chris's brain size: {chris_size} voxels&quot;)
+print(f&quot;Aamir's brain size: {aamir_size} voxels&quot;)
+
+# Determine which brain is larger
+if chris_size &gt; aamir_size:
+    print(&quot;Chris has the larger brain.&quot;)
+elif aamir_size &gt; chris_size:
+    print(&quot;Aamir has the larger brain.&quot;)
+else:
+    print(&quot;Both brains are the same size.&quot;)
+</code></pre>
+<pre><code>Chris's brain size: 1480032 voxels
+Aamir's brain size: 1799361 voxels
+Aamir has the larger brain.
+</code></pre>
+<p>After running this we get:</p>
+<pre><code>Chris's brain size: 1480032 voxels
+Aamir's brain size: 1799361 voxels
+Aamir has the larger brain.
+</code></pre>
+<p>So, it seems as if Aamir has the bigger brain. We can doublecheck these results by running the same analysis using <code>fslstats</code>.</p>
+<h3 id="using-fslstats">Using fslstats</h3>
+<p>The code to run this on your local machine is:</p>
+<pre><code># Calculate the number of non-zero voxels for Chris' brain
+chris_voxels=$(fslstats chris_bet.nii -V | awk '{print $1}')
+
+# Calculate the number of non-zero voxels for Aamir's brain
+aamir_voxels=$(fslstats aamir_bet.nii -V | awk '{print $1}')
+
+# Print the number of voxels
+echo &quot;Chris' brain size in voxels: $chris_voxels&quot;
+echo &quot;Aamir's brain size in voxels: $aamir_voxels&quot;
+
+# Compare the voxel counts and print who has the bigger brain
+if [ &quot;$chris_voxels&quot; -gt &quot;$aamir_voxels&quot; ]; then
+    echo &quot;Chris has the bigger brain.&quot;
+elif [ &quot;$chris_voxels&quot; -lt &quot;$aamir_voxels&quot; ]; then
+    echo &quot;Aamir has the bigger brain.&quot;
+else
+    echo &quot;Both brains are the same size.&quot;
+fi
+</code></pre>
+<p>which gives:</p>
+<pre><code>Chris' brain size in voxels: 1480032
+Aamir's brain size in voxels: 1799361
+Aamir has the bigger brain.
+</code></pre>
+<p>It's a nice sanity check to see that both <code>nilearn</code> and <code>FSL</code> reach the same conclusion in Aamir having the bigger brain.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../home/" class="btn btn-neutral float-left" title="MRICN Homepage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../fc_conceptual_overview/" class="btn btn-neutral float-right" title="A conceptual introduction to functional connectivity using nilearn">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../home/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../fc_conceptual_overview/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
