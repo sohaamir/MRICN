@@ -1,5 +1,7 @@
 # Magnetic Resonance Imaging in Cognitive Neuroscience (MRICN) - University of Birmingham (Spring 2024)
 
+[![Read the Docs](https://img.shields.io/badge/MRICN_docs-v1.0-blue?style=flat&logo=github&logoColor=blue)](https://sohaamir.github.io/MRICN/)
+
 These are the materials for my input to the MRICN module at the University of Birmingham. 
 
 There are three main parts: 
